@@ -1,48 +1,69 @@
 <?php
-	// Include config.php file
-	include_once 'configDB.php';
+// Include config.php file
+include_once 'configDB.php';
 
-	// Create a class role
-	class Database extends Config {
-	  // Fetch all or a single user from database
-	  public function fetch($id = 0) {
-	    $sql = 'SELECT * FROM `notice`';
-	    if ($id != 0) {
-	      $sql .= ' notice_id = :notice_id';
-	    }
-        
-        
-	    $stmt = $this->conn->prepare($sql);
-		 
-	    $stmt->execute();
-		
-		
-        var_dump($id);
-	    $rows = $stmt->fetchAll();
-	    return $rows;
-	  }
+// Create a class role
+class Notice extends Config
+{
+	// Fetch all or a single user from database
 
-	  // Insert an user in the database
-	    public function insert( $notice_id, $pseudo, $comment, $isvisible ) {
-	    $sql = 'INSERT INTO `notice` ( notice_id, pseudo, comment, isvisible) VALUES ( :notice_id, :pseudo, :comment, :isvisible)';
-	    $stmt = $this->conn->prepare($sql);
-	    $stmt->execute(['notice_id' => $notice_id, 'pseudo' => $pseudo, 'comment' => $comment, 'isvisible' => $isvisible,]);
-	    return true;
-	  }
 
-	  // Update an user in the database
-	  public function update( $notice_id, $pseudo, $comment, $isvisible) {
-	    $sql = 'UPDATE `notice` SET notice_id = :notice_id, pseudo = :pseudo, comment = :comment, description = :description, WHERE notice_id = :notice_id';
-	    $stmt = $this->conn->prepare($sql);
-	    $stmt->execute(['notice_id' => $notice_id, 'pseudo' => $pseudo, 'comment' => $comment, 'isvisible' => $isvisible,]);
-	    return true;
-	  }
+	public function getNoticeById($id)
+	{
 
-	  // Delete an user from database
-	  public function delete($id) {
-	    $sql = 'DELETE FROM `notice` WHERE notice_id = :notice_id';
-	    $stmt = $this->conn->prepare($sql);
-	    $stmt->execute(['notice_id' => $id]);
-	    return true;
-	  }
+		if ($id != null) {
+			$sql = 'SELECT * FROM notice WHERE notice_id = :id ';
+		}
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(':id', $id);
+		$rows = $stmt->execute();
+		$rows = $stmt->fetch();
+		return $rows;
 	}
+
+	public function fetchAll()
+	{
+		$sql = 'SELECT * FROM notice';
+		$stmt = $this->conn->prepare($sql);
+		$stmt->execute();
+		$rows = $stmt->fetchAll();
+		return $rows;
+	}
+
+
+	// Insert an user in the database
+
+	public function insert($pseudo, $comment, $isvisible)
+	{
+		$sql = 'INSERT INTO notice(pseudo, comment, isvisible) VALUES ( :pseudo, :comment, :isvisible);';
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->bindParam(':comment', $comment);
+		$stmt->bindParam(':isvisible', $isvisible);
+		$stmt->execute();
+		return true;
+	}
+
+	// Update an user in the database
+	public function update($pseudo, $comment, $isvisible, $notice_id)
+	{
+		$sql = 'UPDATE notice SET  pseudo = :pseudo,  comment = :comment , isvisible = :isvisible  WHERE notice_id = :id';
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(':id', $notice_id);
+		$stmt->bindParam(':pseudo', $pseudo);
+		$stmt->bindParam(':comment', $comment);
+		$stmt->bindParam(':isvisible', $isvisible);
+		$stmt->execute();
+		return true;
+	}
+
+	// Delete an user from database
+	public function delete($id)
+	{
+		$sql = 'DELETE FROM notice WHERE notice_id = :id';
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(':id', $id);
+		$stmt->execute();
+		return true;
+	}
+}

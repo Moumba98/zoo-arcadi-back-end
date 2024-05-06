@@ -3,7 +3,7 @@
 	include_once 'configDB.php';
 
 	// Create a class Users
-	class Database extends Config {
+	class User extends Config {
 	  // Fetch all or a single user from database
 
 	  public function getUserById($id) {
@@ -26,7 +26,6 @@
 	    return $rows;
 	  }
 
-
 	  // Insert an user in the database
 	    public function insert( $username, $password, $name, $first_name, $role_id) {
 	    $sql = 'INSERT INTO users (username, password, name, first_name, role_id) VALUES ( :username, :password, :name, :first_name,:role_id)';
@@ -41,10 +40,16 @@
 	  }
 
 	  // Update an user in the database
-	  public function update($username, $password, $name, $first_name, $role_id) {
+	  public function update($username, $password, $name, $first_name, $role_id, $user_id) {
 	    $sql = 'UPDATE users SET user_id = :user_id, username = :username, password = :password, name = :name, first_name = :first_name, role_id = :role_id WHERE user_id = :user_id';
 	    $stmt = $this->conn->prepare($sql);
-	    $stmt->execute(['username' => $username, 'password' => $password, 'name' => $name, 'first_name' => $first_name,'role_id' => $role_id, ]);
+		$stmt->bindParam(':user_id', $user_id);
+		$stmt->bindParam(':username', $username);
+		$stmt->bindParam(':password', $password);
+		$stmt->bindParam(':name', $name);
+		$stmt->bindParam(':first_name', $first_name);
+		$stmt->bindParam(':role_id', $role_id);
+	    $stmt->execute();
 	    return true;
 	  }
 
@@ -52,7 +57,8 @@
 	  public function delete($id) {
 	    $sql = 'DELETE FROM users WHERE user_id = :user_id';
 	    $stmt = $this->conn->prepare($sql);
-	    $stmt->execute(['user_id' => $id]);
+		$stmt->bindParam(':user_id', $id);
+	    $stmt->execute();
 	    return true;
 	  }
 	}

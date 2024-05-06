@@ -3,14 +3,14 @@
 	include_once 'configDB.php';
 
 	// Create a class role
-	class Race extends Config {
+	class Picture extends Config {
 	  // Fetch all or a single user from database
 
 
-	  public function getRaceById($id) {
+	  public function getPictureById($id) {
 	   
 	    if ($id != null) {
-		  $sql = 'SELECT * FROM race WHERE race_id = :id ';
+		  $sql = 'SELECT * FROM picture WHERE picture_id = :id ';
 		}
 		  $stmt = $this->conn->prepare($sql);
 		  $stmt->bindParam(':id', $id);
@@ -20,36 +20,38 @@
 	  }
 
 	public function fetchAll() {
-	      $sql = 'SELECT * FROM race ;';
+	      $sql = 'SELECT * FROM picture ;';
 	      $stmt = $this->conn->prepare($sql);
 		  $stmt->execute();
 	      $rows = $stmt->fetchAll();
 	    return $rows;
 	  }
 
-
-	  // Insert an user in the database
-	  public function insert( $label) {
-	    $sql = 'INSERT INTO race (label) VALUES ( :label);';
+	  public function insert($picture_name, $picture_date) {
+	    $sql = 'INSERT INTO picture(picture_name, picture_date) VALUES (:picture_name, :picture_date);';
 	    $stmt = $this->conn->prepare($sql);
-		$stmt->bindParam(':label', $label);
+        $stmt->bindParam(':picture_name', $picture_name);
+
+        $stmt->bindParam(':picture_date', $picture_date);
+		
 	    $stmt->execute();
 	    return true;
 	  }
 
 	  // Update an user in the database
-	  public function update(   $label,$race_id,) {
-	    $sql = 'UPDATE race SET label = :label  WHERE race_id = :id';
+	  public function update(   $picture_name, $picture_date, $picture_id) {
+	    $sql = 'UPDATE picture SET picture_name = :picture_name, picture_date = :picture_date  WHERE picture_id = :id';
 	    $stmt = $this->conn->prepare($sql);
-		$stmt->bindParam(':label', $label);
-		$stmt->bindParam(':id', $race_id);
+        $stmt->bindParam(':picture_name', $picture_name);
+		$stmt->bindParam(':picture_date', $picture_date);
+		$stmt->bindParam(':id', $picture_id);
 		$stmt->execute();
 	    return true;
 	  }
 
 	  // Delete an user from database
 	  public function delete($id) {
-	    $sql = 'DELETE FROM race WHERE race_id = :id';
+	    $sql = 'DELETE FROM picture WHERE picture_id = :id';
 	    $stmt = $this->conn->prepare($sql);
 		$stmt->bindParam(':id', $id);
 	    $stmt->execute();
