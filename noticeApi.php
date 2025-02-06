@@ -1,9 +1,20 @@
 <?php
-// Include CORS headers
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-header('Access-Control-Allow-Headers: X-Requested-With');
-header('Content-Type: application/json');
+
+// Autoriser les requêtes provenant de tous les domaines
+header("Access-Control-Allow-Origin: http://localhost:4200");
+
+// Autoriser les méthodes HTTP spécifiques
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+
+// Autoriser les en-têtes spécifiques, y compris Content-Type
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Répondre à la requête préliminaire si la méthode est OPTIONS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 
 // Include action.php file
 include_once 'noticedb.php';

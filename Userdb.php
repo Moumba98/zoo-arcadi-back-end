@@ -26,22 +26,48 @@
 	    return $rows;
 	  }
 
+
+
+
 	  // Insert an user in the database
-	    public function insert( $username, $password, $name, $first_name, $role_id) {
-	    $sql = 'INSERT INTO users (username, password, name, first_name, role_id) VALUES ( :username, :password, :name, :first_name,:role_id)';
-	    $stmt = $this->conn->prepare($sql);
+	  public function insert($username, $password, $name, $first_name, $role_id) {
+		// Hasher le mot de passe avant de l'ajouter dans la base
+		$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+	
+		// SQL pour insérer l'utilisateur avec le mot de passe hashé
+		$sql = 'INSERT INTO users (username, password, name, first_name, role_id)
+				VALUES (:username, :password, :name, :first_name, :role_id)';
+		$stmt = $this->conn->prepare($sql);
 		$stmt->bindParam(':username', $username);
-		$stmt->bindParam(':password', $password);
+		$stmt->bindParam(':password', $password); // Ne pas hasher ici
+		//$stmt->bindParam(':password', $hashedPassword);
 		$stmt->bindParam(':name', $name);
 		$stmt->bindParam(':first_name', $first_name);
 		$stmt->bindParam(':role_id', $role_id);
-	    $stmt->execute();
-	    return true;
-	  }
+		$stmt->execute();
+		return true;
+	}
+
+
+	   // public function insert( $username, $password, $name, $first_name, $role_id) {
+
+		//$sql = 'INSERT INTO users (username, password, name, first_name, role_id)
+		// VALUES ( :username, :password, :name, :first_name,:role_id)';
+	   // $stmt = $this->conn->prepare($sql);
+		//$stmt->bindParam(':username', $username);
+		//$stmt->bindParam(':password', $password);
+		//$stmt->bindParam(':name', $name);
+		//$stmt->bindParam(':first_name', $first_name);
+		//$stmt->bindParam(':role_id', $role_id);
+	   // $stmt->execute();
+	  //  return true;
+	 // }
 
 	  // Update an user in the database
 	  public function update($username, $password, $name, $first_name, $role_id, $user_id) {
-	    $sql = 'UPDATE users SET user_id = :user_id, username = :username, password = :password, name = :name, first_name = :first_name, role_id = :role_id WHERE user_id = :user_id';
+	    $sql = 'UPDATE users SET user_id = :user_id, username = :username,
+		 password = :password, name = :name, first_name = :first_name, 
+		 role_id = :role_id WHERE user_id = :user_id';
 	    $stmt = $this->conn->prepare($sql);
 		$stmt->bindParam(':user_id', $user_id);
 		$stmt->bindParam(':username', $username);

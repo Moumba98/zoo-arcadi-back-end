@@ -2,7 +2,7 @@
 // Include CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-header('Access-Control-Allow-Headers: X-Requested-With');
+header('Access-Control-Allow-Headers: X-Requested-With, Content-Type, X-Auth-Token, Authorization, Origin');
 header('Content-Type: application/json');
 
 // Include action.php file
@@ -29,7 +29,7 @@ if ($api == 'GET') {
 // Add a new user into database
 if ($api == 'POST') {
 	$data = json_decode(file_get_contents('php://input'));
-	$date = $raport->test_input($data->Raport);
+	$date = $raport->test_input($data->date);
 	$detail = $raport->test_input($data->detail);
 	$user_id = $raport->test_input($data->user_id);
 	$animal_id = $raport->test_input($data->animal_id);
