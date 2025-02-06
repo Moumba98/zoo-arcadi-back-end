@@ -18,6 +18,19 @@
 	     return $rows;
 	  }
 
+	  public function login($email, $pwd) {
+	   
+	    if ($email != null && $pwd != null) {
+		  $sql = 'SELECT * FROM users WHERE email = :email and password = :password';
+		}
+		  $stmt = $this->conn->prepare($sql);
+		  $stmt->bindParam(':email', $email);
+		  $stmt->bindParam(':password', $pwd);
+	      $rows = $stmt->execute();
+		  $rows = $stmt->fetch();
+	     return $rows;
+	  }
+
 	  public function fetchAll() {
 	      $sql = 'SELECT * FROM users ;';
 	      $stmt = $this->conn->prepare($sql);
